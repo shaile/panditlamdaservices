@@ -39,7 +39,7 @@ export class AppController {
 
   @Get("auth/glogin")
   async googleAuth() {
-    return "Update new Build 14";
+    return "Update new Build 16";
   }
 
   // @Get("google/redirect")
