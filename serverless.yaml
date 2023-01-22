@@ -1,0 +1,56 @@
+service: pandit-serverless
+
+plugins:
+ - serverless-plugin-optimize
+ - serverless-dynamodb-local
+ - serverless-offline 
+
+package:
+  exclude:
+    - .git/**
+    - .gitignore
+    - .DS_Store
+    - npm-debug.log
+    - yarn-*.log
+    - .serverless/**
+    - .serverless_plugins/**
+    # - '!node_modules/**'
+    # - 'node_modules/node-fetch/**'
+
+
+
+provider:
+ name: aws
+ runtime: nodejs16.x
+ region: ap-south-1
+ stage: dev
+ memorySize: 256
+ timeout: 10
+ endpointType: regional
+
+functions:
+ app: # The name of the lambda function
+   # The module 'handler' is exported in the file 'src/lambda'
+   handler: dist/serverless.handler
+   events:
+     - http:
+         method: any
+         path: /{any+}
+         cors: true
+resources:
+  Resources:
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: UserTable
+        AttributeDefinitions:
+            - AttributeName: email
+              AttributeType: S
+          
+        KeySchema: 
+            - AttributeName: email 
+              KeyType: HASH      
+        
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1   
